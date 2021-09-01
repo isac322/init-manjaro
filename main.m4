@@ -148,7 +148,7 @@ echo "${exclude_list[@]}"
 
 mapfile -t < <(find "$SCRIPT_DIR/components" -type f -name '*.bash' ${exclude_list[@]} | sort)
 for f in "${MAPFILE[@]}"; do
-  echo "$f"
+  $f
 done
 
 
