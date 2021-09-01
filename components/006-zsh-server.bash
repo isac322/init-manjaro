@@ -42,3 +42,5 @@ curl -o ~/.p10k.zsh https://gist.githubusercontent.com/isac322/641c89f4db32c3f73
 
 sudo touch /usr/share/oh-my-zsh/cache/dotenv-allowed.list /usr/share/oh-my-zsh/cache/dotenv-disallowed.list
 sudo chmod 666 /usr/share/oh-my-zsh/cache/dotenv-allowed.list /usr/share/oh-my-zsh/cache/dotenv-disallowed.list
+
+chsh -s "$(which zsh)"

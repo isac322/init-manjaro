@@ -41,3 +41,5 @@ curl -o ~/.p10k.zsh https://gist.githubusercontent.com/isac322/641c89f4db32c3f73
 
 sudo touch /usr/share/oh-my-zsh/cache/dotenv-allowed.list /usr/share/oh-my-zsh/cache/dotenv-disallowed.list /usr/share/oh-my-zsh/cache/kubectl_completion
 sudo chmod 666 /usr/share/oh-my-zsh/cache/dotenv-allowed.list /usr/share/oh-my-zsh/cache/dotenv-disallowed.list /usr/share/oh-my-zsh/cache/kubectl_completion
+
+chsh -s "$(which zsh)"
