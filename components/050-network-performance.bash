@@ -35,5 +35,5 @@ net.core.default_qdisc = cake
 net.ipv4.tcp_congestion_control = bbr
 EOF
 
-sudo modprob tcp_bbr
+sudo modprobe tcp_bbr
 sudo sysctl --system
