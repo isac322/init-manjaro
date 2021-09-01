@@ -306,7 +306,7 @@ case "$instance_type" in
     fi
 
     if [ $_arg_pure_ftpd = 'off' ]; then
-      exclude_list+=('009-sshguard-with-pure-ftpd.bash' '013-iptables-ftp.bash')
+      exclude_list+=('009-sshguard-with-pure-ftpd.bash' '013-iptables-ftp.bash' '054-pure-ftpd.bash')
     else
       exclude_list+=('009-sshguard.bash')
     fi
