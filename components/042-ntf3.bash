@@ -2,6 +2,9 @@
 
 set -ex
 
+if pacman -Qi ntfs-3g &> /dev/null; then
+  sudo pacman -Rns ntfs-3g --noconfirm
+fi
 yay -S ntfs3-dkms --noconfirm --removemake --needed
 
 cat <<EOF | sudo tee /etc/udev/rules.d/61-ntfs3-dkms.rules > /dev/null
