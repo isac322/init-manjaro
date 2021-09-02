@@ -23,5 +23,6 @@ rm_pkg manjaro-settings-manager-kcm
 rm_pkg matray
 rm_pkg timeshift-autosnap-manjaro
 rm_pkg manjaro-kde-settings
+rm_pkg breeze-gtk
 
 unset rm_pkg
