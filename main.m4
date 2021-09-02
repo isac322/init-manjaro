@@ -70,6 +70,7 @@ desktop_only=(
   '038-1password.bash'
   '042-ntf3.bash'
   '048-aws.bash'
+  '060-gnome-utils.bash'
 )
 server_only=(
   '005-vim.bash'
