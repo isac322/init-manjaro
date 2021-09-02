@@ -2,4 +2,4 @@
 
 set -ex
 
-yay -S kubectl k9s --noconfirm --removemake --needed
+yay -S kubectl k9s helm kubeseal stern-bin --noconfirm --removemake --needed
