@@ -10,6 +10,7 @@
 # ARG_OPTIONAL_BOOLEAN([openvpn3],[],[Install openvpn3-linux])
 # ARG_OPTIONAL_BOOLEAN([openssh-hpn],[],[Install hpn patched openssh])
 # ARG_OPTIONAL_BOOLEAN([k8s-utils],[],[Install kubernetes utilities],[on])
+# ARG_OPTIONAL_BOOLEAN([dry-run],[],[Do not execute scripts])
 # ARG_TYPE_GROUP_SET([instance_type],[INSTANCE_TYPE],[type],[desktop,server])
 # ARG_TYPE_GROUP_SET([gpu_type],[GPU_TYPE],[graphic],[nvidia,intel])
 # ARG_TYPE_GROUP_SET([mirror_type],[MIRROR_TYPE],[mirror],[testing,stable])
@@ -35,7 +36,7 @@ die()
 
 evaluate_strictness()
 {
-	[[ "$2" =~ ^-(-(mirror|type|graphic|wayland|docker|pure-ftpd|openvpn3|openssh-hpn|k8s-utils|help)$|[mtgh]) ]] && die "You have passed '$2' as a value of argument '$1', which makes it look like that you have omitted the actual value, since '$2' is an option accepted by this script. This is considered a fatal error."
+	[[ "$2" =~ ^-(-(mirror|type|graphic|wayland|docker|pure-ftpd|openvpn3|openssh-hpn|k8s-utils|dry-run|help)$|[mtgh]) ]] && die "You have passed '$2' as a value of argument '$1', which makes it look like that you have omitted the actual value, since '$2' is an option accepted by this script. This is considered a fatal error."
 }
 
 # validators
@@ -90,12 +91,13 @@ _arg_pure_ftpd="off"
 _arg_openvpn3="off"
 _arg_openssh_hpn="off"
 _arg_k8s_utils="on"
+_arg_dry_run="off"
 
 
 print_help()
 {
 	printf '%s\n' "Initial setup for manjaro"
-	printf 'Usage: %s [-m|--mirror <MIRROR_TYPE>] [-t|--type <INSTANCE_TYPE>] [-g|--graphic <GPU_TYPE>] [--(no-)wayland] [--(no-)docker] [--(no-)pure-ftpd] [--(no-)openvpn3] [--(no-)openssh-hpn] [--(no-)k8s-utils] [-h|--help]\n' "$0"
+	printf 'Usage: %s [-m|--mirror <MIRROR_TYPE>] [-t|--type <INSTANCE_TYPE>] [-g|--graphic <GPU_TYPE>] [--(no-)wayland] [--(no-)docker] [--(no-)pure-ftpd] [--(no-)openvpn3] [--(no-)openssh-hpn] [--(no-)k8s-utils] [--(no-)dry-run] [-h|--help]\n' "$0"
 	printf '\t%s\n' "-m, --mirror: Manjaro Mirror. Can be one of: 'testing' and 'stable' (default: 'stable')"
 	printf '\t%s\n' "-t, --type: Installation type. Can be one of: 'desktop' and 'server' (default: 'server')"
 	printf '\t%s\n' "-g, --graphic: GPU type. Can be one of: 'nvidia' and 'intel' (no default)"
@@ -105,6 +107,7 @@ print_help()
 	printf '\t%s\n' "--openvpn3, --no-openvpn3: Install openvpn3-linux (off by default)"
 	printf '\t%s\n' "--openssh-hpn, --no-openssh-hpn: Install hpn patched openssh (off by default)"
 	printf '\t%s\n' "--k8s-utils, --no-k8s-utils: Install kubernetes utilities (on by default)"
+	printf '\t%s\n' "--dry-run, --no-dry-run: Do not execute scripts (off by default)"
 	printf '\t%s\n' "-h, --help: Prints help"
 }
 
@@ -180,6 +183,10 @@ parse_commandline()
 			--no-k8s-utils|--k8s-utils)
 				_arg_k8s_utils="on"
 				test "${1:0:5}" = "--no-" && _arg_k8s_utils="off"
+				;;
+			--no-dry-run|--dry-run)
+				_arg_dry_run="on"
+				test "${1:0:5}" = "--no-" && _arg_dry_run="off"
 				;;
 			-h|--help)
 				print_help
@@ -264,6 +271,8 @@ server_only=(
   '009-sshguard.bash'
   '009-sshguard-with-pure-ftpd.bash'
   '050-network-performance.bash'
+  '054-pure-ftpd.bash'
+  '056-deluge-server.bash'
 )
 
 set -ex
@@ -276,9 +285,9 @@ esac
 case "$instance_type" in
   'desktop')
     exclude_list+=(
+      "${iptable[@]}"
       "${server_only[@]}"
     )
-    exclude_list+=("${iptable[@]}")
 
     if [ $_arg_wayland = 'off' ]; then
       exclude_list+=("${kde_wayland[@]}")
@@ -286,7 +295,6 @@ case "$instance_type" in
 
     case $_arg_graphic in
     'intel') exclude_list+=("${graphic_nvidia[@]}");;
-    'nvidia') noop;;
     esac
 
     ;;
@@ -334,7 +342,11 @@ echo "${exclude_list[@]}"
 
 mapfile -t < <(find "$SCRIPT_DIR/components" -type f -name '*.bash' ${exclude_list[@]} | sort)
 for f in "${MAPFILE[@]}"; do
-  $f
+  if [ $_arg_dry_run = 'off' ]; then
+    $f
+  else
+    echo "$f"
+  fi
 done
 
 

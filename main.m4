@@ -12,6 +12,7 @@ exit 11  #)Created by argbash-init v2.10.0
 # ARG_OPTIONAL_BOOLEAN([openvpn3], [], [Install openvpn3-linux])
 # ARG_OPTIONAL_BOOLEAN([openssh-hpn], [], [Install hpn patched openssh])
 # ARG_OPTIONAL_BOOLEAN([k8s-utils], [], [Install kubernetes utilities], [on])
+# ARG_OPTIONAL_BOOLEAN([dry-run], [], [Do not execute scripts])
 # ARG_TYPE_GROUP_SET([instance_type], [INSTANCE_TYPE], [type], [desktop,server])
 # ARG_TYPE_GROUP_SET([gpu_type], [GPU_TYPE], [graphic], [nvidia,intel])
 # ARG_TYPE_GROUP_SET([mirror_type], [MIRROR_TYPE], [mirror], [testing,stable])
@@ -78,6 +79,8 @@ server_only=(
   '009-sshguard.bash'
   '009-sshguard-with-pure-ftpd.bash'
   '050-network-performance.bash'
+  '054-pure-ftpd.bash'
+  '056-deluge-server.bash'
 )
 
 set -ex
@@ -90,9 +93,9 @@ esac
 case "$instance_type" in
   'desktop')
     exclude_list+=(
+      "${iptable[@]}"
       "${server_only[@]}"
     )
-    exclude_list+=("${iptable[@]}")
 
     if [ $_arg_wayland = 'off' ]; then
       exclude_list+=("${kde_wayland[@]}")
@@ -100,7 +103,6 @@ case "$instance_type" in
 
     case $_arg_graphic in
     'intel') exclude_list+=("${graphic_nvidia[@]}");;
-    'nvidia') noop;;
     esac
 
     ;;
@@ -148,7 +150,11 @@ echo "${exclude_list[@]}"
 
 mapfile -t < <(find "$SCRIPT_DIR/components" -type f -name '*.bash' ${exclude_list[@]} | sort)
 for f in "${MAPFILE[@]}"; do
-  $f
+  if [ $_arg_dry_run = 'off' ]; then
+    $f
+  else
+    echo "$f"
+  fi
 done
 
 
