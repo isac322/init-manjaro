@@ -13,6 +13,7 @@ yay -S bluedevil kcalc gwenview kdeconnect kio-gdrive korganizer kdepim-addons a
     plasma-pa \
     plasma-simplemenu plasma5-applets-virtual-desktop-bar-git \
     caffeine-ng \
+    fancontrol-kcm \
     xsettingsd \
     --noconfirm --removemake --needed
 
