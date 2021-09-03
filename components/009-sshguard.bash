@@ -25,6 +25,12 @@ BLACKLIST_FILE=100:/var/db/sshguard/blacklist.db
 IPV6_SUBNET=64
 # IPv4 subnet size to block. Defaults to a single address, CIDR notation. (optional, default to 32)
 IPV4_SUBNET=24
+
+# IP addresses listed in the WHITELIST_FILE are considered to be
+# friendlies and will never be blocked.
+WHITELIST_FILE=/etc/sshguard-whitelist
 EOF
+
+sudo touch /etc/sshguard-whitelist
 
 sudo systemctl enable --now sshguard
