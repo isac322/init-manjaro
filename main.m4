@@ -8,7 +8,7 @@ exit 11  #)Created by argbash-init v2.10.0
 # ARG_OPTIONAL_SINGLE([graphic], [g], [GPU type])
 # ARG_OPTIONAL_BOOLEAN([wayland], [], [Enable Wayland (Not recommended yet)])
 # ARG_OPTIONAL_BOOLEAN([docker], [], [Install Docker & compose], [on])
-# ARG_OPTIONAL_BOOLEAN([pure-ftpd], [], [Install pure-ftpd and enable sshguard for it])
+# ARG_OPTIONAL_SINGLE([ftpd], [], [Install specified ftpd and enable sshguard for it])
 # ARG_OPTIONAL_BOOLEAN([openvpn3], [], [Install openvpn3-linux])
 # ARG_OPTIONAL_BOOLEAN([openssh-hpn], [], [Install hpn patched openssh])
 # ARG_OPTIONAL_BOOLEAN([borg-server], [], [Install borg backup server])
@@ -18,6 +18,7 @@ exit 11  #)Created by argbash-init v2.10.0
 # ARG_TYPE_GROUP_SET([instance_type], [INSTANCE_TYPE], [type], [desktop,server])
 # ARG_TYPE_GROUP_SET([gpu_type], [GPU_TYPE], [graphic], [nvidia,intel])
 # ARG_TYPE_GROUP_SET([mirror_type], [MIRROR_TYPE], [mirror], [testing,stable])
+# ARG_TYPE_GROUP_SET([ftpd_type], [FTPD_TYPE], [ftpd], [pure-ftpd,vsftpd])
 # ARGBASH_SET_DELIM([ =])
 # ARG_OPTION_STACKING([getopt])
 # ARG_RESTRICT_VALUES([no-local-options])
@@ -81,8 +82,10 @@ server_only=(
   '008-openssh-hpn.bash'
   '009-sshguard.bash'
   '009-sshguard-with-pure-ftpd.bash'
+  '009-sshguard-with-vsftpd.bash'
   '050-network-performance.bash'
   '054-pure-ftpd.bash'
+  '054-vsftpd.bash'
   '056-deluge-server.bash'
   '062-borg.bash'
   '064-certbot.bash'
@@ -126,10 +129,18 @@ case "$instance_type" in
       exclude_list+=('008-openssh.bash')
     fi
 
-    if [ $_arg_pure_ftpd = 'off' ]; then
-      exclude_list+=('009-sshguard-with-pure-ftpd.bash' '013-iptables-ftp.bash' '054-pure-ftpd.bash')
+    if [ $_arg_ftpd = 'vsftpd' ]; then
+      exclude_list+=('009-sshguard-with-pure-ftpd.bash' '054-pure-ftpd.bash')
+    elif [ $_arg_ftpd = 'pure-ftpd' ]; then
+      exclude_list+=('009-sshguard-with-vsftpd.bash' '054-vsftpd.bash')
     else
-      exclude_list+=('009-sshguard.bash')
+      exclude_list+=(
+        '009-sshguard-with-pure-ftpd.bash'
+        '009-sshguard-with-vsftpd.bash'
+        '013-iptables-ftp.bash'
+        '054-pure-ftpd.bash'
+        '054-vsftpd.bash'
+      )
     fi
 
     if [ $_arg_borg_server = 'off' ]; then
