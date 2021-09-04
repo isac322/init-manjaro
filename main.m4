@@ -151,7 +151,7 @@ if [ $_arg_docker = 'off' ]; then
 fi
 
 if [ $_arg_openssh_hpn = 'off' ]; then
-  exclude_list+=('046-docker.bash')
+  exclude_list+=('008-openssh-hpn.bash')
 fi
 
 if [ $_arg_k8s_utils = 'off' ]; then
