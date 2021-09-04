@@ -12,6 +12,7 @@ exit 11  #)Created by argbash-init v2.10.0
 # ARG_OPTIONAL_BOOLEAN([openvpn3], [], [Install openvpn3-linux])
 # ARG_OPTIONAL_BOOLEAN([openssh-hpn], [], [Install hpn patched openssh])
 # ARG_OPTIONAL_BOOLEAN([borg-server], [], [Install borg backup server])
+# ARG_OPTIONAL_BOOLEAN([certbot], [], [Install cerbot and enable auto renewal])
 # ARG_OPTIONAL_BOOLEAN([k8s-utils], [], [Install kubernetes utilities], [on])
 # ARG_OPTIONAL_BOOLEAN([dry-run], [], [Do not execute scripts])
 # ARG_TYPE_GROUP_SET([instance_type], [INSTANCE_TYPE], [type], [desktop,server])
@@ -84,6 +85,7 @@ server_only=(
   '054-pure-ftpd.bash'
   '056-deluge-server.bash'
   '062-borg.bash'
+  '064-certbot.bash'
 )
 
 set -ex
@@ -132,6 +134,10 @@ case "$instance_type" in
 
     if [ $_arg_borg_server = 'off' ]; then
       exclude_list+=('062-borg.bash')
+    fi
+
+    if [ $_arg_certbot = 'off' ]; then
+      exclude_list+=('064-certbot.bash')
     fi
     ;;
 esac
