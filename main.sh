@@ -10,6 +10,7 @@
 # ARG_OPTIONAL_BOOLEAN([openvpn3],[],[Install openvpn3-linux])
 # ARG_OPTIONAL_BOOLEAN([openssh-hpn],[],[Install hpn patched openssh])
 # ARG_OPTIONAL_BOOLEAN([borg-server],[],[Install borg backup server])
+# ARG_OPTIONAL_BOOLEAN([certbot],[],[Install cerbot and enable auto renewal])
 # ARG_OPTIONAL_BOOLEAN([k8s-utils],[],[Install kubernetes utilities],[on])
 # ARG_OPTIONAL_BOOLEAN([dry-run],[],[Do not execute scripts])
 # ARG_TYPE_GROUP_SET([instance_type],[INSTANCE_TYPE],[type],[desktop,server])
@@ -37,7 +38,7 @@ die()
 
 evaluate_strictness()
 {
-	[[ "$2" =~ ^-(-(mirror|type|graphic|wayland|docker|pure-ftpd|openvpn3|openssh-hpn|borg-server|k8s-utils|dry-run|help)$|[mtgh]) ]] && die "You have passed '$2' as a value of argument '$1', which makes it look like that you have omitted the actual value, since '$2' is an option accepted by this script. This is considered a fatal error."
+	[[ "$2" =~ ^-(-(mirror|type|graphic|wayland|docker|pure-ftpd|openvpn3|openssh-hpn|borg-server|certbot|k8s-utils|dry-run|help)$|[mtgh]) ]] && die "You have passed '$2' as a value of argument '$1', which makes it look like that you have omitted the actual value, since '$2' is an option accepted by this script. This is considered a fatal error."
 }
 
 # validators
@@ -92,6 +93,7 @@ _arg_pure_ftpd="off"
 _arg_openvpn3="off"
 _arg_openssh_hpn="off"
 _arg_borg_server="off"
+_arg_certbot="off"
 _arg_k8s_utils="on"
 _arg_dry_run="off"
 
@@ -99,7 +101,7 @@ _arg_dry_run="off"
 print_help()
 {
 	printf '%s\n' "Initial setup for manjaro"
-	printf 'Usage: %s [-m|--mirror <MIRROR_TYPE>] [-t|--type <INSTANCE_TYPE>] [-g|--graphic <GPU_TYPE>] [--(no-)wayland] [--(no-)docker] [--(no-)pure-ftpd] [--(no-)openvpn3] [--(no-)openssh-hpn] [--(no-)borg-server] [--(no-)k8s-utils] [--(no-)dry-run] [-h|--help]\n' "$0"
+	printf 'Usage: %s [-m|--mirror <MIRROR_TYPE>] [-t|--type <INSTANCE_TYPE>] [-g|--graphic <GPU_TYPE>] [--(no-)wayland] [--(no-)docker] [--(no-)pure-ftpd] [--(no-)openvpn3] [--(no-)openssh-hpn] [--(no-)borg-server] [--(no-)certbot] [--(no-)k8s-utils] [--(no-)dry-run] [-h|--help]\n' "$0"
 	printf '\t%s\n' "-m, --mirror: Manjaro Mirror. Can be one of: 'testing' and 'stable' (default: 'stable')"
 	printf '\t%s\n' "-t, --type: Installation type. Can be one of: 'desktop' and 'server' (default: 'server')"
 	printf '\t%s\n' "-g, --graphic: GPU type. Can be one of: 'nvidia' and 'intel' (no default)"
@@ -109,6 +111,7 @@ print_help()
 	printf '\t%s\n' "--openvpn3, --no-openvpn3: Install openvpn3-linux (off by default)"
 	printf '\t%s\n' "--openssh-hpn, --no-openssh-hpn: Install hpn patched openssh (off by default)"
 	printf '\t%s\n' "--borg-server, --no-borg-server: Install borg backup server (off by default)"
+	printf '\t%s\n' "--certbot, --no-certbot: Install cerbot and enable auto renewal (off by default)"
 	printf '\t%s\n' "--k8s-utils, --no-k8s-utils: Install kubernetes utilities (on by default)"
 	printf '\t%s\n' "--dry-run, --no-dry-run: Do not execute scripts (off by default)"
 	printf '\t%s\n' "-h, --help: Prints help"
@@ -186,6 +189,10 @@ parse_commandline()
 			--no-borg-server|--borg-server)
 				_arg_borg_server="on"
 				test "${1:0:5}" = "--no-" && _arg_borg_server="off"
+				;;
+			--no-certbot|--certbot)
+				_arg_certbot="on"
+				test "${1:0:5}" = "--no-" && _arg_certbot="off"
 				;;
 			--no-k8s-utils|--k8s-utils)
 				_arg_k8s_utils="on"
@@ -282,6 +289,7 @@ server_only=(
   '054-pure-ftpd.bash'
   '056-deluge-server.bash'
   '062-borg.bash'
+  '064-certbot.bash'
 )
 
 set -ex
@@ -330,6 +338,10 @@ case "$instance_type" in
 
     if [ $_arg_borg_server = 'off' ]; then
       exclude_list+=('062-borg.bash')
+    fi
+
+    if [ $_arg_certbot = 'off' ]; then
+      exclude_list+=('064-certbot.bash')
     fi
     ;;
 esac
