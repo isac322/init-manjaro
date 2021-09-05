@@ -2,7 +2,7 @@
 
 set -ex
 
-yay -S bluedevil kcalc gwenview kdeconnect kio-gdrive korganizer kdepim-addons ark kcharselect kdenetwork-filesharing \
+yay -S bluedevil kcalc gwenview kdeconnect kio-gdrive ark kcharselect kdenetwork-filesharing \
     kdesdk-kioslaves kdesdk-thumbnailers kgpg kipi-plugins kompare ksystemlog kwrite okular partitionmanager \
     print-manager spectacle sweeper yakuake latte-dock dolphin-plugins kscreen sddm-kcm ksshaskpass kamoso \
     kde-gtk-config gnome-settings-daemon gsettings-desktop-schemas gsettings-qt \
@@ -15,7 +15,10 @@ yay -S bluedevil kcalc gwenview kdeconnect kio-gdrive korganizer kdepim-addons a
     caffeine-ng \
     fancontrol-kcm \
     xsettingsd \
+    kolourpaint \
     --noconfirm --removemake --needed
+yay -S korganizer --assume-installed mariadb --removemake --noconfirm --needed
+yay -S kdepim-addons --noconfirm --removemake --needed --asdeps
 
 yes | yay -S pulseaudio-modules-bt libldac --removemake --norebuild --nodiffmenu --noeditmenu --noprovides --rebuildall
 
@@ -48,3 +51,9 @@ EOF
 
 echo 'PINENTRY=pinentry-qt' > ~/.config/environment.d/99-default-pinentry.conf
 echo 'pinentry-program /usr/bin/pinentry-kwallet' > ~/.gnupg/gpg-agent.conf
+
+
+cat <<EOF | tee ~/.config/akonadi/akonadiserverrc > /dev/null
+[%General]
+Driver=QSQLITE3
+EOF
