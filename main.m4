@@ -65,6 +65,10 @@ desktop_app=(
 )
 graphic_nvidia=(
   '015-nvidia-modsetting.bash'
+  '068-mpv-config-nvidia.bash'
+)
+graphic_intel=(
+  '068-mpv-config-intel.bash'
 )
 desktop_only=(
   '005-vim-clipboard.bash'
@@ -74,6 +78,7 @@ desktop_only=(
   '042-ntf3.bash'
   '048-aws.bash'
   '060-gnome-utils.bash'
+  '066-mpv.bash'
 )
 server_only=(
   '005-vim.bash'
@@ -111,6 +116,7 @@ case "$instance_type" in
 
     case $_arg_graphic in
     'intel') exclude_list+=("${graphic_nvidia[@]}");;
+    'nvidia') exclude_list+=("${graphic_intel[@]}");;
     esac
 
     ;;
@@ -120,6 +126,7 @@ case "$instance_type" in
       "${kde_wayland[@]}"
       "${desktop_app[@]}"
       "${graphic_nvidia[@]}"
+      "${graphic_intel[@]}"
       "${desktop_only[@]}"
     )
 
