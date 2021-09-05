@@ -79,6 +79,7 @@ desktop_only=(
   '048-aws.bash'
   '060-gnome-utils.bash'
   '066-mpv.bash'
+  '070-wine.bash'
 )
 server_only=(
   '005-vim.bash'
