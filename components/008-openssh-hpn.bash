@@ -14,7 +14,7 @@ function modify_sshd_config() {
     fi
   done
 
-  sed -i -E "${exprs[@]}" "$cfg_path"
+  sudo sed -i -E "${exprs[@]}" "$cfg_path"
 }
 
 set -ex
