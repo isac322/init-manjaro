@@ -12,7 +12,7 @@ packages=(
   'zsh-fast-syntax-highlighting-git'
   'zsh-history-search-multi-word-git'
   'zsh-theme-powerlevel10k'
-  'chroma-bin'
+  'go-chroma'
   'tmux'
 )
 yay -S "${packages[@]}" --noconfirm --removemake --needed
