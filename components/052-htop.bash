@@ -5,7 +5,7 @@ set -ex
 yay -S htop --noconfirm --removemake --needed
 yay -S lm_sensors lsof strace --noconfirm --removemake --needed --asdeps
 
-mkdir .config/htop
+mkdir ~/.config/htop
 cat <<EOF | tee .config/htop/htoprc > /dev/null
 # Beware! This file is rewritten by htop when settings are changed in the interface.
 # The parser is also very primitive, and not human-friendly.
