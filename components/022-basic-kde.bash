@@ -22,6 +22,7 @@ yay -S kdepim-addons --noconfirm --removemake --needed --asdeps
 
 yes | yay -S pulseaudio-modules-bt libldac --removemake --norebuild --nodiffmenu --noeditmenu --noprovides --rebuildall
 
+mkdir -p ~/.config/systemd/user
 cat <<EOF > ~/.config/systemd/user/mpris-proxy.service
 [Unit]
 Description=Forward bluetooth media controls to MPRIS
@@ -49,10 +50,13 @@ cat <<EOF | sudo tee -a /etc/pulse/default.pa > /dev/null
 load-module module-switch-on-connect
 EOF
 
+mkdir -p ~/.config/environment.d
 echo 'PINENTRY=pinentry-qt' > ~/.config/environment.d/99-default-pinentry.conf
+mkdir -p ~/.gnupg
 echo 'pinentry-program /usr/bin/pinentry-kwallet' > ~/.gnupg/gpg-agent.conf
 
 
+mkdir -p ~/.config/akonadi
 cat <<EOF | tee ~/.config/akonadi/akonadiserverrc > /dev/null
 [%General]
 Driver=QSQLITE3
