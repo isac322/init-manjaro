@@ -20,7 +20,7 @@ cp /usr/share/oh-my-zsh/zshrc ~/.zshrc
 
 sed -i '1i# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.\n# Initialization code that may require console input (password prompts, [y/n]\n# confirmations, etc.) must go above this block; everything else may go below.\nif [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then\n  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"\nfi\n\n' ~/.zshrc
 sed -Ei -e 's/^(ZSH_THEME=.+)$/#\1/' ~/.zshrc
-perl -i -0777 -pe 's/^plugins=\([^)]*\)/plugins=(colored-man-pages colorize command-not-found extract sudo docker git pip python virtualenv archlinux systemd cargo common-aliases docker-compose jsontools rust urltools dotenv aliases alias-finder aws django golang helm history kubectl rsync tmux)/m' ~/.zshrc
+perl -i -0777 -pe 's/^plugins=\([^)]*\)/plugins=(colored-man-pages colorize command-not-found extract sudo docker git pip python virtualenv archlinux systemd cargo common-aliases docker-compose jsontools rust urltools dotenv aliases alias-finder aws golang helm history kubectl rsync tmux)/m' ~/.zshrc
 
 tee -a ~/.zshrc > /dev/null << END
 
