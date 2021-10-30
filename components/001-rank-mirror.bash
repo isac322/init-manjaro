@@ -3,4 +3,4 @@
 set -ex
 
 sudo pacman-mirrors -c all
-sudo pacman -Syu --noconfirm
+sudo pacman -Sy --noconfirm
