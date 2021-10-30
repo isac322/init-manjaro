@@ -2,4 +2,4 @@
 
 set -ex
 
-yay -S plasma-wayland-session --noconfirm --nedded
+yay -S plasma-wayland-session --noconfirm --needed
