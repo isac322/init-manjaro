@@ -15,7 +15,7 @@ EOF
 sudo mkdir -p /etc/docker
 cat <<EOF | sudo tee /etc/docker/daemon.json > /dev/null
 {
-	hosts: [fd://, tcp://127.0.0.1:2375]
+	"hosts": ["fd://", "tcp://127.0.0.1:2375"]
 }
 EOF
 
