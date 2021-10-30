@@ -3,4 +3,4 @@
 set -ex
 
 sudo pacman-mirrors --api --set-branch testing
-sudo pacman -Syu --noconfirm
+sudo pacman -Sy --noconfirm
