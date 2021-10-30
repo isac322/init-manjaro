@@ -26,4 +26,5 @@ sudo sed -i -E 's/^\s*"\s*(let\s+skip_defaults_vim=1)\s*$/\1/' /etc/vimrc
 
 echo -e '\nset clipboard=unnamedplus' | sudo tee -a /etc/vimrc > /dev/null
 
+mkdir -p ~/.config/environment.d
 echo 'EDITOR=vim' > ~/.config/environment.d/99-default-editor.conf
