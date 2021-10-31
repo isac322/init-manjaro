@@ -2,7 +2,7 @@
 
 set -ex
 
-if pacman -Qi exfat-utils &> /dev/null; then
+if [ $(pacman -Qq exfat-utils) = 'exfat-utils' ]; then
   sudo pacman -Rns exfat-utils --noconfirm
 fi
 yay -S exfatprogs --noconfirm --removemake --needed
