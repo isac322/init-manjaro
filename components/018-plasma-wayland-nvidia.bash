@@ -2,4 +2,4 @@
 
 set -ex
 
-yay -S egl-wayland --noconfirm --nedded
+yay -S egl-wayland --noconfirm --needed
