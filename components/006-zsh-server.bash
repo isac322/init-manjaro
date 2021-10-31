@@ -47,15 +47,15 @@ ZSH_DOTENV_PROMPT=false
 
 # aliases
 
-alias l='exa -l'
-alias la='exa -la'
-alias lr='exa -lrRs=mod'
-alias lt='exa -lHrs=mod'
-alias l='exa -lF'
-alias ldot='exa -ld .*'
-alias lS='exa -lrs=size'
-alias lart='exa -1as=mod'
-alias lrt='exa -1rs=mod'
+alias l='exa -lg'
+alias la='exa -lga'
+alias lr='exa -lgrRs=mod'
+alias lt='exa -lgHrs=mod'
+alias ll='exa -lgF'
+alias ldot='exa -lgd .*'
+alias lS='exa -lgrs=size'
+alias lart='exa -1gas=mod'
+alias lrt='exa -1grs=mod'
 
 alias cat='bat --paging=never'
 alias -g CA='2>&1 | bat -A'
