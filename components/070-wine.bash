@@ -2,8 +2,7 @@
 
 set -ex
 
-# Add '-Wno-error=format-security'
-yay -S unzip-natspec --noconfirm --removemake --asdeps --needed --mflags="CFLAGS='-Wno-error=format-security'"
+yay -S unzip-natspec --noconfirm --removemake --asdeps --needed
 
 yay -S wine-staging winetricks wine-mono wine-gecko --noconfirm --removemake --asexplicit --needed
 
