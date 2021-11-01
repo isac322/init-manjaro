@@ -276,7 +276,6 @@ kde=(
 )
 kde_wayland=(
   '016-plasma-wayland.bash'
-  '018-plasma-wayland-nvidia.bash'
 )
 desktop_app=(
   '024-jetbrains.bash'
@@ -322,8 +321,8 @@ server_only=(
 set -ex
 
 case "$mirror_type" in
-  'stable') exclude_list+=('000-*.bash');;
-  'testing') exclude_list+=('001-*.bash');;
+  'stable') exclude_list+=('000-*.bash') ;;
+  'testing') exclude_list+=('001-*.bash') ;;
 esac
 
 case "$instance_type" in
@@ -334,12 +333,20 @@ case "$instance_type" in
     )
 
     if [ $_arg_wayland = 'off' ]; then
-      exclude_list+=("${kde_wayland[@]}")
+      exclude_list+=(
+        "${kde_wayland[@]}"
+        '018-plasma-wayland-nvidia.bash'
+      )
     fi
 
     case $_arg_graphic in
-    'intel') exclude_list+=("${graphic_nvidia[@]}");;
-    'nvidia') exclude_list+=("${graphic_intel[@]}");;
+      'intel')
+        exclude_list+=(
+          "${graphic_nvidia[@]}"
+          '018-plasma-wayland-nvidia.bash'
+        )
+        ;;
+      'nvidia') exclude_list+=("${graphic_intel[@]}") ;;
     esac
 
     ;;
@@ -399,7 +406,7 @@ if [ $_arg_k8s_utils = 'off' ]; then
   exclude_list+=('034-k8s-utils.bash')
 fi
 
-exclude_list=( "${exclude_list[@]/#/-not -name }" )
+exclude_list=("${exclude_list[@]/#/-not -name }")
 echo "${exclude_list[@]}"
 
 mapfile -t < <(find "$SCRIPT_DIR/components" -type f -name '*.bash' ${exclude_list[@]} | sort)
@@ -410,6 +417,5 @@ for f in "${MAPFILE[@]}"; do
     echo "$f"
   fi
 done
-
 
 # ] <-- needed because of Argbash
