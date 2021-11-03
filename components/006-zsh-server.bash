@@ -68,3 +68,9 @@ END
 curl -o ~/.p10k.zsh https://gist.githubusercontent.com/isac322/641c89f4db32c3f73dc8a3eb267417f3/raw/.p10k.zsh
 
 chsh -s "$(which zsh)"
+
+
+# setup for root
+
+sudo chsh -s `which zsh` root
+sudo ln -s "$HOME/.p10k.zsh" "$HOME/.zshrc"  /root
