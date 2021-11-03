@@ -18,6 +18,7 @@ packages=(
   'ripgrep'
   'exa'
   'ncdu'
+  'chroma-bin'
 )
 yay -S "${packages[@]}" --noconfirm --removemake --needed
 
