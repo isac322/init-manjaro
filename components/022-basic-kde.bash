@@ -16,8 +16,8 @@ yay -S bluedevil kcalc gwenview kdeconnect kio-gdrive ark kcharselect kdenetwork
     fancontrol-kcm \
     xsettingsd \
     kolourpaint \
+    korganizer \
     --noconfirm --removemake --needed
-yay -S korganizer --assume-installed mariadb --removemake --noconfirm --needed
 yay -S kdepim-addons --noconfirm --removemake --needed --asdeps
 
 yes | yay -S pulseaudio-modules-bt libldac --removemake --norebuild --nodiffmenu --noeditmenu --noprovides --rebuildall
@@ -54,10 +54,3 @@ mkdir -p ~/.config/environment.d
 echo 'PINENTRY=pinentry-qt' > ~/.config/environment.d/99-default-pinentry.conf
 mkdir -p ~/.gnupg
 echo 'pinentry-program /usr/bin/pinentry-kwallet' > ~/.gnupg/gpg-agent.conf
-
-
-mkdir -p ~/.config/akonadi
-cat <<EOF | tee ~/.config/akonadi/akonadiserverrc > /dev/null
-[%General]
-Driver=QSQLITE3
-EOF
