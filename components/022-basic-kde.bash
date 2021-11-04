@@ -17,6 +17,7 @@ yay -S bluedevil kcalc gwenview kdeconnect kio-gdrive ark kcharselect kdenetwork
     xsettingsd \
     kolourpaint \
     korganizer \
+    crudini \
     --noconfirm --removemake --needed
 yay -S kdepim-addons --noconfirm --removemake --needed --asdeps
 
@@ -49,6 +50,10 @@ cat <<EOF | sudo tee -a /etc/pulse/default.pa > /dev/null
 ### Automatically switch to newly-connected devices
 load-module module-switch-on-connect
 EOF
+
+sudo crudini --set /etc/bluetooth/main.conf Policy AutoEnable true
+
+yay -Rns crudini --noconfirm --removemake
 
 mkdir -p ~/.config/environment.d
 echo 'PINENTRY=pinentry-qt' > ~/.config/environment.d/99-default-pinentry.conf
