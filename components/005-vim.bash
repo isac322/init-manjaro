@@ -23,3 +23,6 @@ plugins=(
 )
 yay -S "${plugins[@]}" --noconfirm --removemake --needed
 sudo sed -i -E 's/^\s*"\s*(let\s+skip_defaults_vim=1)\s*$/\1/' /etc/vimrc
+
+mkdir -p ~/.config/environment.d
+echo 'EDITOR=vim' > ~/.config/environment.d/99-default-editor.conf

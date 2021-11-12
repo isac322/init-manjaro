@@ -70,7 +70,6 @@ graphic_intel=(
   '068-mpv-config-intel.bash'
 )
 desktop_only=(
-  '005-vim-clipboard.bash'
   '006-zsh.bash'
   '028-font.bash'
   '038-1password.bash'
@@ -81,7 +80,6 @@ desktop_only=(
   '070-wine.bash'
 )
 server_only=(
-  '005-vim.bash'
   '006-zsh-server.bash'
   '008-openssh.bash'
   '008-openssh-hpn.bash'
