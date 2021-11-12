@@ -29,3 +29,9 @@ When=PostTransaction
 NeedsTargets
 Exec=/bin/sh -c 'while read -r trg; do case $trg in linux) exit 0; esac; done; /usr/bin/mkinitcpio -P'
 EOF
+
+
+sudo mkdir -p /etc/udev/rules.d
+cat <<EOF | sudo tee /etc/udev/rules.d/70-nvidia.rules >> /dev/null
+ACTION=="add", DEVPATH=="/bus/pci/drivers/nvidia", RUN+="/usr/bin/nvidia-modprobe -c0 -u"
+EOF
