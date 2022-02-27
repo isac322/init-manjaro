@@ -17,8 +17,15 @@ function modify_sshd_config() {
   sudo sed -i -E "${exprs[@]}" "$cfg_path"
 }
 
+function rm_pkg() {
+    if pacman -Qi "$@" &> /dev/null; then
+        sudo pacman -Rns "$@" --noconfirm
+    fi
+}
+
 set -ex
 
+rm_pkg openssh
 yay -S openssh-hpn --noconfirm --removemake --needed
 
 modify_sshd_config 'no' 'PermitEmptyPasswords' 'PermitRootLogin' 'Compression'
