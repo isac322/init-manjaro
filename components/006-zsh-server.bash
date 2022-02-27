@@ -19,7 +19,6 @@ packages=(
   'exa'
   'ncdu'
   'tmux'
-  'chroma-bin'
 )
 yay -S "${packages[@]}" --noconfirm --removemake --needed
 
