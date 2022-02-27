@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -ex
+
+yay -S swapspace --noconfirm --removemake --needed
+sudo systemctl enable --now swapspace
