@@ -10,7 +10,7 @@ packages=(
   'zsh-autosuggestions'
   'zsh-completions'
   'zsh-fast-syntax-highlighting-git'
-  'zsh-history-substring-search-git'
+  'zsh-history-search-multi-word-git'
   'skim'
   'fd'
   'zsh-theme-powerlevel10k'
@@ -32,7 +32,7 @@ tee -a ~/.zshrc > /dev/null << END
 # for zsh plugins
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+source /usr/share/zsh/plugins/history-search-multi-word/history-search-multi-word.plugin.zsh
 source /usr/share/zsh/plugins/alias-tips/alias-tips.plugin.zsh
 source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 source /usr/share/skim/key-bindings.zsh
