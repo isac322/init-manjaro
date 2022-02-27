@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 
+function rm_pkg() {
+    if pacman -Qi "$@" &> /dev/null; then
+        sudo pacman -Rns "$@" --noconfirm
+    fi
+}
+
 set -ex
+
+rm_pkg iptables
+yes | yay -S iptables-nft --needed
 
 sudo iptables -F
 sudo iptables -X
