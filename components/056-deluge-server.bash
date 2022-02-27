@@ -16,7 +16,6 @@
 
 
   deluge-console -U ${auth[0]} -P ${auth[1]} config --set allow_remote true
-  deluge-console -U ${auth[0]} -P ${auth[1]} config --set cache_size 65536
   deluge-console -U ${auth[0]} -P ${auth[1]} config --set copy_torrent_file true
   deluge-console -U ${auth[0]} -P ${auth[1]} config --set dont_count_slow_torrents true
   deluge-console -U ${auth[0]} -P ${auth[1]} config --set download_location '/home/deluge/ongoing'
