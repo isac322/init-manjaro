@@ -72,4 +72,4 @@ chsh -s "$(which zsh)"
 # setup for root
 
 sudo chsh -s `which zsh` root
-sudo ln -s "$HOME/.p10k.zsh" "$HOME/.zshrc"  /root
+sudo ln -s -f "$HOME/.p10k.zsh" "$HOME/.zshrc"  /root
