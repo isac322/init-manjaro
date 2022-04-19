@@ -6,7 +6,7 @@ sudo iptables -N TCP
 sudo iptables -N UDP
 sudo iptables -N sshguard
 
-sudo iptables -A INPUT -m multiport -p tcp --destination-ports 22 -j sshguard
+sudo iptables -A INPUT -p tcp --dport 22 -j sshguard
 sudo iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 sudo iptables -A INPUT -i lo -j ACCEPT
 sudo iptables -A INPUT -m conntrack --ctstate INVALID -j DROP

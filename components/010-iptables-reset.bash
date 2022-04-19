@@ -2,8 +2,6 @@
 
 set -ex
 
-yes | yay -S iptables-nft --needed
-
 sudo iptables -F
 sudo iptables -X
 sudo iptables -t nat -F

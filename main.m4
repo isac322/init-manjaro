@@ -12,6 +12,9 @@ exit 11  #)Created by argbash-init v2.10.0
 # ARG_OPTIONAL_BOOLEAN([openvpn3], [], [Install openvpn3-linux])
 # ARG_OPTIONAL_BOOLEAN([openssh-hpn], [], [Install hpn patched openssh])
 # ARG_OPTIONAL_BOOLEAN([borg-server], [], [Install borg backup server])
+# ARG_OPTIONAL_BOOLEAN([deluged], [], [Install deluge daemon])
+# ARG_OPTIONAL_BOOLEAN([swapspace], [], [Install swapspace], [on])
+# ARG_OPTIONAL_BOOLEAN([iptables], [], [Setup iptables], [on])
 # ARG_OPTIONAL_BOOLEAN([certbot], [], [Install cerbot and enable auto renewal])
 # ARG_OPTIONAL_BOOLEAN([k8s-utils], [], [Install kubernetes utilities], [on])
 # ARG_OPTIONAL_BOOLEAN([dry-run], [], [Do not execute scripts])
@@ -27,8 +30,8 @@ exit 11  #)Created by argbash-init v2.10.0
 
 # [ <-- needed because of Argbash
 
-mirror_type=$_arg_mirror
-instance_type=$_arg_type
+mirror_type="$_arg_mirror"
+instance_type="$_arg_type"
 
 if [ "$instance_type" = 'desktop' ] && [ -z "$_arg_graphic" ]; then
   echo 'You have to specify GPU type'
@@ -37,160 +40,146 @@ fi
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")"  &> /dev/null && pwd)"
 
-declare -a exclude_list
-
-iptable=(
-  '010-iptables-reset.bash'
-  '011-iptables-basic.bash'
-  '012-iptables-deluge.bash'
-  '013-iptables-ftp.bash'
-  '014-iptables-save.bash'
-)
-kde=(
-  '020-cleanup-kde.bash'
-  '022-basic-kde.bash'
-  '023-theme-kde.bash'
-  '030-ssh-agent.bash'
-)
-kde_wayland=(
-  '016-plasma-wayland.bash'
-)
-desktop_app=(
-  '024-jetbrains.bash'
-  '026-chrome.bash'
-  '032-vorta.bash'
-  '036-authy.bash'
-  '044-slack.bash'
-)
-graphic_nvidia=(
-  '015-nvidia-modsetting.bash'
-  '068-mpv-config-nvidia.bash'
-)
-graphic_intel=(
-  '068-mpv-config-intel.bash'
-)
-desktop_only=(
-  '006-zsh.bash'
-  '028-font.bash'
-  '038-1password.bash'
-  '042-ntf3.bash'
-  '048-aws.bash'
-  '060-gnome-utils.bash'
-  '066-mpv.bash'
-  '070-wine.bash'
-)
-server_only=(
-  '006-zsh-server.bash'
-  '008-openssh.bash'
-  '008-openssh-hpn.bash'
-  '009-sshguard.bash'
-  '009-sshguard-with-pure-ftpd.bash'
-  '009-sshguard-with-vsftpd.bash'
-  '050-network-performance.bash'
-  '054-pure-ftpd.bash'
-  '054-vsftpd.bash'
-  '056-deluge-server.bash'
-  '062-borg.bash'
-  '064-certbot.bash'
-)
+declare -a include_list
 
 set -ex
 
+# instance independent
+
 case "$mirror_type" in
-  'stable') exclude_list+=('000-*.bash') ;;
-  'testing') exclude_list+=('001-*.bash') ;;
+  'stable') include_list+=('001-rank-mirror.bash') ;;
+  'testing') include_list+=('000-setup-mirror-testing.bash') ;;
 esac
+
+include_list+=(
+  '002-makepkg.bash'
+  '003-pkgfile.bash'
+  '004-yay.bash'
+  '005-vim.bash'
+  '052-htop.bash'
+  '058-exfat.bash'
+)
+
+if [ "$_arg_openvpn3" = 'on' ]; then
+  include_list+=('040-openvpn3.bash')
+fi
+
+if [ "$_arg_docker" = 'on' ]; then
+  include_list+=('046-docker.bash')
+fi
+
+if [ "$_arg_k8s_utils" = 'on' ]; then
+  include_list+=('034-k8s-utils.bash')
+fi
+
+if [ "$_arg_swapspace" = 'on' ]; then
+  include_list+=('071-swapspace')
+fi
+
+
+# instance dependent
 
 case "$instance_type" in
   'desktop')
-    exclude_list+=(
-      "${iptable[@]}"
-      "${server_only[@]}"
+    include_list+=(
+      '006-zsh.bash'
+      '020-cleanup-kde.bash'
+      '022-basic-kde.bash'
+      '023-theme-kde.bash'
+      '024-jetbrains.bash'
+      '026-chrome.bash'
+      '028-font.bash'
+      '030-ssh-agent.bash'
+      '032-vorta.bash'
+      '036-authy.bash'
+      '038-1password.bash'
+      '042-ntf3.bash'
+      '044-slack.bash'
+      '048-aws.bash'
+      '060-gnome-utils.bash'
+      '066-mpv.bash'
+      '070-wine.bash'
     )
 
-    if [ $_arg_wayland = 'off' ]; then
-      exclude_list+=(
-        "${kde_wayland[@]}"
-        '018-plasma-wayland-nvidia.bash'
-      )
+    if [ "$_arg_wayland" = 'on' ]; then
+      include_list+=('016-plasma-wayland.bash')
     fi
 
-    case $_arg_graphic in
-      'intel')
-        exclude_list+=(
-          "${graphic_nvidia[@]}"
-          '018-plasma-wayland-nvidia.bash'
+    case "$_arg_graphic" in
+      'intel') include_list+=('068-mpv-config-intel.bash') ;;
+      'nvidia')
+        include_list+=(
+          '015-nvidia-modsetting.bash'
+          '068-mpv-config-nvidia.bash'
         )
+
+        if [ "$_arg_wayland" = 'on' ]; then
+          include_list+=('018-plasma-wayland-nvidia.bash')
+        fi
         ;;
-      'nvidia') exclude_list+=("${graphic_intel[@]}") ;;
     esac
 
     ;;
   'server')
-    exclude_list+=(
-      "${kde[@]}"
-      "${kde_wayland[@]}"
-      "${desktop_app[@]}"
-      "${graphic_nvidia[@]}"
-      "${graphic_intel[@]}"
-      "${desktop_only[@]}"
+    include_list+=(
+      '006-zsh-server.bash'
+      '010-iptables-nft.bash'
+      '050-network-performance.bash'
     )
 
-    if [ $_arg_openssh_hpn = 'off' ]; then
-      exclude_list+=('008-openssh-hpn.bash')
+    if [ "$_arg_openssh_hpn" = 'on' ]; then
+      include_list+=('008-openssh-hpn.bash')
     else
-      exclude_list+=('008-openssh.bash')
+      include_list+=('008-openssh.bash')
     fi
 
-    if [ $_arg_ftpd = 'vsftpd' ]; then
-      exclude_list+=('009-sshguard-with-pure-ftpd.bash' '054-pure-ftpd.bash')
-    elif [ $_arg_ftpd = 'pure-ftpd' ]; then
-      exclude_list+=('009-sshguard-with-vsftpd.bash' '054-vsftpd.bash')
-    else
-      exclude_list+=(
-        '009-sshguard-with-pure-ftpd.bash'
-        '009-sshguard-with-vsftpd.bash'
-        '013-iptables-ftp.bash'
-        '054-pure-ftpd.bash'
-        '054-vsftpd.bash'
+    if [ "$_arg_deluged" = 'on' ]; then
+      include_list+=('056-deluge-server.bash')
+    fi
+
+    if [ "$_arg_borg_server" = 'on' ]; then
+      include_list+=('062-borg.bash')
+    fi
+
+    if [ "$_arg_certbot" = 'on' ]; then
+      include_list+=('064-certbot.bash')
+    fi
+
+    if [ "$_arg_ftpd" = 'vsftpd' ]; then
+      include_list+=('054-vsftpd.bash')
+    elif [ "$_arg_ftpd" = 'pure-ftpd' ]; then
+      include_list+=('054-pure-ftpd.bash')
+    fi
+
+    if [ "$_arg_iptables" = 'on' ]; then
+      include_list+=(
+        '009-sshguard.bash'
+        '010-iptables-reset.bash'
+        '011-iptables-basic.bash'
+        '014-iptables-save.bash'
       )
-    fi
 
-    if [ $_arg_borg_server = 'off' ]; then
-      exclude_list+=('062-borg.bash')
-    fi
+      if [ "$_arg_deluged" = 'on' ]; then
+        include_list+=('012-iptables-deluge.bash')
+      fi
 
-    if [ $_arg_certbot = 'off' ]; then
-      exclude_list+=('064-certbot.bash')
+      if [ "$_arg_ftpd" = 'vsftpd' ]; then
+        include_list+=('009-sshguard-with-vsftpd.bash' '013-iptables-ftp.bash')
+      elif [ "$_arg_ftpd" = 'pure-ftpd' ]; then
+        include_list+=('009-sshguard-with-pure-ftpd.bash' '013-iptables-ftp.bash')
+      fi
     fi
     ;;
 esac
 
-if [ $_arg_openvpn3 = 'off' ]; then
-  exclude_list+=('040-openvpn3.bash')
-fi
+mapfile -t script_list < <(printf "%s\n" "${include_list[@]}" | sort -n)
+echo "${script_list[@]}"
 
-if [ $_arg_docker = 'off' ]; then
-  exclude_list+=('046-docker.bash')
-fi
-
-if [ $_arg_openssh_hpn = 'off' ]; then
-  exclude_list+=('008-openssh-hpn.bash')
-fi
-
-if [ $_arg_k8s_utils = 'off' ]; then
-  exclude_list+=('034-k8s-utils.bash')
-fi
-
-exclude_list=("${exclude_list[@]/#/-not -name }")
-echo "${exclude_list[@]}"
-
-mapfile -t < <(find "$SCRIPT_DIR/components" -type f -name '*.bash' ${exclude_list[@]} | sort)
-for f in "${MAPFILE[@]}"; do
-  if [ $_arg_dry_run = 'off' ]; then
-    $f
+for f in "${script_list[@]}"; do
+  if [ "$_arg_dry_run" = 'off' ]; then
+    ${SCRIPT_DIR}/components/${f}
   else
-    echo "$f"
+    echo "${SCRIPT_DIR}/components/${f}"
   fi
 done
 
