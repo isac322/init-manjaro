@@ -17,6 +17,7 @@ exit 11  #)Created by argbash-init v2.10.0
 # ARG_OPTIONAL_BOOLEAN([iptables], [], [Setup iptables], [on])
 # ARG_OPTIONAL_BOOLEAN([certbot], [], [Install cerbot and enable auto renewal])
 # ARG_OPTIONAL_BOOLEAN([k8s-utils], [], [Install kubernetes utilities], [on])
+# ARG_OPTIONAL_BOOLEAN([mount-hdds], [], [Register and mount attached HDDs])
 # ARG_OPTIONAL_BOOLEAN([dry-run], [], [Do not execute scripts])
 # ARG_TYPE_GROUP_SET([instance_type], [INSTANCE_TYPE], [type], [desktop,server])
 # ARG_TYPE_GROUP_SET([gpu_type], [GPU_TYPE], [graphic], [nvidia,intel])
@@ -143,6 +144,10 @@ case "$instance_type" in
 
     if [ "$_arg_certbot" = 'on' ]; then
       include_list+=('064-certbot.bash')
+    fi
+
+    if [ "$_arg_mount_hdds" = 'on' ]; then
+      include_list+=('099-spin-down-hdd.bash' '100-mount-hdds.bash')
     fi
 
     if [ "$_arg_ftpd" = 'vsftpd' ]; then
