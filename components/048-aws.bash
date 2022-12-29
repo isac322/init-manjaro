@@ -2,4 +2,4 @@
 
 set -ex
 
-yay -S aws-cli-v2-bin aws-iam-authenticator-bin --noconfirm --removemake --needed
+yay -S aws-cli-v2 aws-iam-authenticator-bin --noconfirm --removemake --needed
