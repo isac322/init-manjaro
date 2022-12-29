@@ -2,15 +2,17 @@
 
 set -ex
 
+yay -S \
+    wireplumber pipewire-pulse \
+    --noconfirm --removemake --needed
 yay -S bluedevil kcalc gwenview kdeconnect kio-gdrive ark kcharselect kdenetwork-filesharing \
-    kdesdk-kioslaves kdesdk-thumbnailers kgpg kipi-plugins kompare ksystemlog kwrite okular partitionmanager \
+    kdesdk-kio kdesdk-thumbnailers kgpg kompare ksystemlog kwrite okular partitionmanager \
     print-manager spectacle sweeper yakuake latte-dock dolphin-plugins kscreen sddm-kcm ksshaskpass kamoso \
     kde-gtk-config gnome-settings-daemon gsettings-desktop-schemas gsettings-qt \
     kwalletcli \
     bluez-utils \
     baloo \
-    nimf-libhangul-git \
-    plasma-pa \
+    plasma-pa kpipewire \
     plasma-simplemenu plasma5-applets-virtual-desktop-bar-git \
     caffeine-ng \
     fancontrol-kcm \
@@ -44,12 +46,6 @@ Xft/RGBA "rgb"
 EOF
 
 systemctl --user enable --now xsettingsd mpris-proxy
-
-cat <<EOF | sudo tee -a /etc/pulse/default.pa > /dev/null
-
-### Automatically switch to newly-connected devices
-load-module module-switch-on-connect
-EOF
 
 sudo crudini --set /etc/bluetooth/main.conf Policy AutoEnable true
 

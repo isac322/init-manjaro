@@ -11,7 +11,7 @@ function rm_pkg() {
 rm_pkg khelpcenter
 rm_pkg kate
 rm_pkg konversation
-rm_pkg web-installer-url-handler pamac-tray-icon-plasma pamac-gtk manjaro-hello
+rm_pkg web-installer-url-handler pamac-tray-icon-plasma pamac-gtk manjaro-hello manjaro-application-utility
 rm_pkg manjaro-settings-manager-knotifier
 rm_pkg manjaro-documentation-en
 rm_pkg networkmanager-openconnect
