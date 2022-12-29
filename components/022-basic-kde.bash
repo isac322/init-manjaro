@@ -18,7 +18,7 @@ yay -S bluedevil kcalc gwenview kdeconnect kio-gdrive ark kcharselect kdenetwork
     fancontrol-kcm \
     xsettingsd \
     kolourpaint \
-    korganizer \
+    kalendar \
     crudini \
     --noconfirm --removemake --needed
 yay -S kdepim-addons --noconfirm --removemake --needed --asdeps
