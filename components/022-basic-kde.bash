@@ -23,8 +23,6 @@ yay -S bluedevil kcalc gwenview kdeconnect kio-gdrive ark kcharselect kdenetwork
     --noconfirm --removemake --needed
 yay -S kdepim-addons --noconfirm --removemake --needed --asdeps
 
-yes | yay -S pulseaudio-modules-bt libldac --removemake --norebuild --nodiffmenu --noeditmenu --noprovides --rebuildall
-
 mkdir -p ~/.config/systemd/user
 cat <<EOF > ~/.config/systemd/user/mpris-proxy.service
 [Unit]
