@@ -18,7 +18,8 @@ ExecStart=/usr/bin/ssh-agent -D -a \$SSH_AUTH_SOCK
 WantedBy=default.target
 EOF
 
-echo 'SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"' > ~/.pam_environment
+mkdir -p ~/.config/environment.d
+echo 'SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"' > ~/.config/environment.d/99-ssh-agent.conf
 
 mkdir -p ~/.config/autostart
 cat <<EOF > ~/.config/autostart/ssh-add.desktop
